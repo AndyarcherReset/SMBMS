@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 
 <footer class="footer">
-    版权归北大青鸟
+    版权清梦
 </footer>
 <script type="text/javascript" src="${pageContext.request.contextPath }/js/time.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery-1.8.3.min.js"></script>

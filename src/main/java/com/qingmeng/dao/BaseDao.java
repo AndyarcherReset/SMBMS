@@ -7,6 +7,7 @@ import java.util.Properties;
 
 //数据库公共类
 public class BaseDao {
+
     private static String driver;
     private static String url;
     private static String userName;
@@ -15,6 +16,7 @@ public class BaseDao {
     static {
 
         InputStream in = BaseDao.class.getClassLoader().getResourceAsStream("db.properties");
+        System.out.println(in);
         Properties properties = new Properties();
 
         try {
@@ -28,7 +30,7 @@ public class BaseDao {
         }
     }
 
-    //H获取数据库连接
+    //获取数据库连接
     public static Connection getConnection(){
         Connection connection = null;
         try {

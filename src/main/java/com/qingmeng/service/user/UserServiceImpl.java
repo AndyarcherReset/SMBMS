@@ -4,7 +4,6 @@ import com.qingmeng.dao.BaseDao;
 import com.qingmeng.dao.user.UserDao;
 import com.qingmeng.dao.user.UserDaoImpl;
 import com.qingmeng.pojo.User;
-import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -24,6 +23,13 @@ public class UserServiceImpl implements UserService{
         try {
             //业务层调用对应的数据库
             user = userDao.getLoginUser(connection, userCode);
+            if (user != null) {
+                if (!password.equals(user.getUserPassword())) {
+                    user = null;
+                }
+            }else {
+                user = null;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
