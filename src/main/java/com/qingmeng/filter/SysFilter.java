@@ -23,11 +23,8 @@ public class SysFilter implements Filter {
         if (user == null) {
             //已经被移除
             response.sendRedirect( "/error.jsp");
-        } else {
-            filterChain.doFilter(req, resp);
         }
         filterChain.doFilter(req, resp);
-
     }
 
     @Override

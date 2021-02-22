@@ -14,9 +14,7 @@ public class BaseDao {
     private static String pwd;
 
     static {
-
         InputStream in = BaseDao.class.getClassLoader().getResourceAsStream("db.properties");
-        System.out.println(in);
         Properties properties = new Properties();
 
         try {
@@ -47,7 +45,7 @@ public class BaseDao {
     public static ResultSet execute(Connection connection,PreparedStatement preparedStatement, ResultSet resultSet, String sql, Object[] params) throws SQLException {
         preparedStatement = connection.prepareStatement(sql);
         for (int i = 0; i < params.length; i++) {
-            preparedStatement.setObject(i+1,params[0]);
+            preparedStatement.setObject(i+1,params[i]);
         }
 
         resultSet = preparedStatement.executeQuery();
@@ -58,7 +56,7 @@ public class BaseDao {
     public static int execute(Connection connection,PreparedStatement preparedStatement, String sql, Object[] params) throws SQLException {
         preparedStatement = connection.prepareStatement(sql);
         for (int i = 0; i < params.length; i++) {
-            preparedStatement.setObject(i+1,params[0]);
+            preparedStatement.setObject(i+1,params[i]);
         }
 
         int udpateRows = preparedStatement.executeUpdate();

@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class UserServiceImpl implements UserService{
-
     private UserDao userDao;
 
     public UserServiceImpl() {
@@ -36,5 +35,23 @@ public class UserServiceImpl implements UserService{
             BaseDao.closeResource(connection, null, null);
         }
         return user;
+    }
+
+    public boolean updatePwdById(int id, String pwd) {
+        Connection connection = BaseDao.getConnection();
+        boolean res = false;
+
+        try {
+            //业务层调用对应的数据库
+            if(userDao.updatePwdById(connection, id, pwd)>0){
+                res =true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            BaseDao.closeResource(connection, null, null);
+        }
+        return res;
     }
 }

@@ -23,6 +23,15 @@
     <url-pattern>/user/exit.do</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>ModifyPwdServlet</servlet-name>
+    <servlet-class>com.qingmeng.servlet.ModifyPwdServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ModifyPwdServlet</servlet-name>
+    <url-pattern>/jsp/user.do</url-pattern>
+  </servlet-mapping>
+
   <!--设置欢迎页面-->
   <welcome-file-list>
     <welcome-file>login.jsp</welcome-file>

@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class User {
 
-    private long id;
+    private int id;
     private String userCode;
     private String userName;
     private String userPassword;
@@ -24,13 +24,13 @@ public class User {
     public User() {
     }
 
-    public User(long id, String userCode, String userPassword) {
+    public User(int id, String userCode, String userPassword) {
         this.id = id;
         this.userCode = userCode;
         this.userPassword = userPassword;
     }
 
-    public User(long id, String userCode, String userName, String userPassword, int gender, String userGender, Date birthday, int age, String phone, String address, int userRole, long createdBy, Date creationDate, long modifyBy, Date modifyDate, Role role) {
+    public User(int id, String userCode, String userName, String userPassword, int gender, String userGender, Date birthday, int age, String phone, String address, int userRole, long createdBy, Date creationDate, long modifyBy, Date modifyDate, Role role) {
         this.id = id;
         this.userCode = userCode;
         this.userName = userName;
@@ -48,11 +48,11 @@ public class User {
         this.modifyDate = modifyDate;
         this.role = role;
     }
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
