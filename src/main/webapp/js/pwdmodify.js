@@ -12,11 +12,12 @@ $(function(){
 	oldpassword.next().html("*");
 	newpassword.next().html("*");
 	rnewpassword.next().html("*");
+	//旧密码失去焦点
 	oldpassword.on("blur",function(){
         $.ajax({
             type:"GET",
-            url:path+"/user/checkPwd.do",
-            data:{oldpassword:oldpassword.val()},
+            url:path+"/jsp/user.do",
+            data:{method:"checkPwd", oldpassword:oldpassword.val()},
             dataType:"JSON",
             success:function(data){
                 if(data.result == "true"){//旧密码正确
@@ -65,16 +66,7 @@ $(function(){
 	
 	
 	saveBtn.on("click",function(){
-		oldpassword.blur();
-		newpassword.blur();
-		rnewpassword.blur();
-		if(oldpassword.attr("validateStatus") == "true"
-			&& newpassword.attr("validateStatus") == "true"
-			&& rnewpassword.attr("validateStatus") == "true"){
-			if(confirm("确定要修改密码？")){
-				$("#userForm").submit();
-			}
-		}
+		$("#userForm").submit();
 		return false;
 	});
 });
