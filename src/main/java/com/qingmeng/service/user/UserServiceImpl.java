@@ -7,6 +7,8 @@ import com.qingmeng.pojo.User;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserServiceImpl implements UserService{
     private UserDao userDao;
@@ -47,6 +49,36 @@ public class UserServiceImpl implements UserService{
                 res =true;
             }
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            BaseDao.closeResource(connection, null, null);
+        }
+        return res;
+    }
+
+    public List<User> getUserList(String userName, int userRole, int curPageNo, int pageSize) {
+        Connection connection = BaseDao.getConnection();
+        List<User> res = new ArrayList<User>();
+
+        try {
+            //业务层调用对应的数据库
+            res = userDao.getUserList(connection, userName, userRole, curPageNo, pageSize);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            BaseDao.closeResource(connection, null, null);
+        }
+        return res;
+    }
+
+    public int queryUserCount(String userName, int userRole) {
+        Connection connection = BaseDao.getConnection();
+        int res = 0;
+
+        try {
+            //业务层调用对应的数据库
+            res = userDao.queryUserCount(connection, userName, userRole);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

@@ -1,10 +1,14 @@
 package com.qingmeng.servlet;
 
 import com.alibaba.fastjson.JSONArray;
+import com.mysql.jdbc.StringUtils;
+import com.qingmeng.pojo.Role;
 import com.qingmeng.pojo.User;
+import com.qingmeng.service.role.RoleServiceImpl;
 import com.qingmeng.service.user.UserService;
 import com.qingmeng.service.user.UserServiceImpl;
 import com.qingmeng.util.Constants;
+import com.qingmeng.util.PageBean;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,18 +18,77 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ModifyPwdServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String method = req.getParameter("method");
-        System.out.println(method);
+
         if("savepwd".equals(method)){
             this.updatePwd(req, resp);
         } else if ("checkPwd".equals(method)) {
             this.checkPwd(req, resp);
+        } else if ("query".equals(method)) {
+            this.query(req, resp);
         }
+    }
+
+    private void query(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        //从前端获取数据
+        String queryname = req.getParameter("queryname");
+        String temp = req.getParameter("queryUserRole");
+        String pageIndex = req.getParameter("pageIndex");
+
+        UserServiceImpl userService = new UserServiceImpl();
+        int pageSize = 5;
+        int curPageNo = 1;
+
+        if (StringUtils.isNullOrEmpty(queryname)) {
+            queryname = "";
+        }
+
+        int queryUserRole=0;
+        if (!StringUtils.isNullOrEmpty(temp)) {
+            queryUserRole = Integer.parseInt(temp);
+        }
+
+        if (!StringUtils.isNullOrEmpty(pageIndex)) {
+            curPageNo = Integer.parseInt(pageIndex);
+        }
+
+        int total = userService.queryUserCount(queryname, queryUserRole);
+        PageBean pageBean = new PageBean(curPageNo, pageSize, total);
+
+        int totalPage = pageBean.getTotalPage();
+        //控制首页和尾页
+        if (totalPage < 1) {
+            curPageNo = 1;
+        } else if (curPageNo > totalPage) {
+            curPageNo = totalPage;
+        }
+
+        //获取用户列表
+        List<User> userList = userService.getUserList(queryname, queryUserRole, curPageNo, pageSize);
+
+        req.setAttribute("userList", userList);
+
+        //获取角色列表
+        RoleServiceImpl roleService = new RoleServiceImpl();
+        List<Role> roleList = roleService.getRoleList();
+        req.setAttribute("roleList", roleList);
+
+        //设置页码
+        req.setAttribute("totalCount", total);
+        req.setAttribute("currentPageNo", curPageNo);
+        req.setAttribute("totalPageCount", totalPage);
+
+        req.setAttribute("queryname", queryname);
+        req.setAttribute("queryUserRole", queryUserRole);
+
+        req.getRequestDispatcher("userlist.jsp").forward(req, resp);
     }
 
     @Override
