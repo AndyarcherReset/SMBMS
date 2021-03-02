@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class UserDaoImpl implements UserDao {
@@ -88,6 +89,29 @@ public class UserDaoImpl implements UserDao {
             BaseDao.closeResource(null, pstm, rs);
         }
         return count;
+    }
+
+    @Override
+    public int addUser(Connection connection, User user) throws SQLException {
+        int res = 0;
+        if (connection != null) {
+            PreparedStatement pstm = null;
+
+            String sql = "insert into smbms_user (userCode,userName,userPassword,gender,birthday,phone,address,userRole) values "
+                    + "(?,?,?,?,?,?,?,?);";
+            String userCode = user.getUserCode();
+            String userName = user.getUserName();
+            String userPassword = user.getUserPassword();
+            int gender = user.getGender();
+            Date birthday = user.getBirthday();
+            String phone = user.getPhone();
+            String address = user.getAddress();
+            int role = user.getUserRole();
+            Object[] params = {userCode,userName, userPassword, gender, birthday, phone, address, role};
+            res = BaseDao.execute(connection, pstm, sql, params);
+            BaseDao.closeResource(null, pstm, null);
+        }
+        return res;
     }
 
     public List<User> getUserList(Connection connection, String userName, int userRole, int curPageNo, int pageSize) throws SQLException {

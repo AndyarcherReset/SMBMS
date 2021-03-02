@@ -9,6 +9,7 @@ var addBtn = null;
 var backBtn = null;
 
 
+
 $(function(){
 	userCode = $("#userCode");
 	userName = $("#userName");
@@ -17,6 +18,7 @@ $(function(){
 	phone = $("#phone");
 	birthday = $("#birthday");
 	userRole = $("#userRole");
+	userRoleItem = $("#userRoleItem")
 	addBtn = $("#add");
 	backBtn = $("#back");
 	//初始化的时候，要把所有的提示信息变为：* 以提示必填项，更灵活，不要写在页面上
@@ -27,13 +29,13 @@ $(function(){
 	phone.next().html("*");
 	birthday.next().html("*");
 	userRole.next().html("*");
-
+	userRoleItem.next().html("*");
 	userCode.bind("blur",function(){
 		//ajax后台验证--userCode是否已存在
 		$.ajax({
 			type:"GET",//请求类型
-			data:{userCode:userCode.val()},
-			url:path+"/user/findByUserCode.do/",//请求的url
+			url:path+"/jsp/user.do",//请求的url
+			data:{method:"checkUserCode",userCode:userCode.val()},
 			dataType:"JSON",
 			success:function(data){
 				//data：返回数据（json对象）

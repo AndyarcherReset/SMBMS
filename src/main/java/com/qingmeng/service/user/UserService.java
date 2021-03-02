@@ -16,4 +16,8 @@ public interface UserService {
     public int queryUserCount(String userName, int userRole);
 
     public List<User> getUserList( String userName, int userRole, int curPageNo, int pageSize) ;
+
+    public boolean queryUserByUserCode(String userCode);
+
+    public int addUser(User user);
 }

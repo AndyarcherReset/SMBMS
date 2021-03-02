@@ -1,19 +1,20 @@
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+         pageEncoding="UTF-8"%>
 <%@include file="common/head.jsp"%>
 <%
-    Object userRoleItem = session.getAttribute("userRoleItem");
-    if(userRoleItem == null){
-        response.sendRedirect("/smbms/role/getRoleList.do");
-    }
+
 %>
+
 <div class="right">
         <div class="location">
             <strong>你现在所在的位置是:</strong>
             <span>用户管理页面 >> 用户添加页面</span>
         </div>
         <div class="providerAdd">
-            <form id="userForm" name="userForm" method="post" action="${pageContext.request.contextPath }/user/add.do">
+            <form id="userForm" name="userForm" method="post" action="${pageContext.request.contextPath}/jsp/user.do">
+                <input type="hidden" name="method" value="add">
                 <!--div的class 为error是验证错误，ok是验证成功-->
                 <div>
                     <label for="userCode">用户编码：</label>
@@ -61,10 +62,34 @@
                     <label >用户角色：</label>
                     <!-- 列出所有的角色分类 -->
 					<select name="userRole" id="userRole">
-                        <option value="0" selected>请选择</option>
-                        <c:forEach var="userRole" items="${userRoleItem}">
-                            <option value="${userRole.id}">${userRole.roleName}</option>
-                        </c:forEach>
+<%--                        <option value="0" selected>请选择</option>--%>
+<%--                        <c:forEach var="userRole" items="${userRoleItem}">--%>
+<%--                            <option value="${userRole.id}">${userRole.roleName}</option>--%>
+<%--                        </c:forEach>--%>
+                    <option value="0"
+                        <c:if test="${userRole == '0'}">
+                            selected
+                        </c:if>
+                    >--请选择--
+                    </option>
+                    <option value="1"
+                        <c:if test="${userRole == '1'}">
+                            selected
+                        </c:if>
+                    >系统管理员
+                    </option>
+                    <option value="2"
+                    <c:if test="${userRole == '2'}">
+                        selected
+                    </c:if>
+                    >经理
+                    </option>
+                    <option value="3"
+                    <c:if test="${userRole == '3'}">
+                        selected
+                    </c:if>
+                        >普通员工
+                    </option>
                     </select>
 	        		<font color="red"></font>
                 </div>

@@ -5,6 +5,7 @@ import com.qingmeng.dao.user.UserDao;
 import com.qingmeng.dao.user.UserDaoImpl;
 import com.qingmeng.pojo.User;
 
+import java.awt.geom.FlatteningPathIterator;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,6 +16,49 @@ public class UserServiceImpl implements UserService{
 
     public UserServiceImpl() {
         userDao = new UserDaoImpl();
+    }
+
+    @Override
+    public int addUser(User user) {
+        int res = 0;
+        Connection connection = BaseDao.getConnection();
+        if (user != null) {
+            try {
+                connection.setAutoCommit(false);
+                res = userDao.addUser(connection, user);
+                connection.commit();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                try {
+                    connection.rollback();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            } finally {
+                BaseDao.closeResource(connection, null, null);
+            }
+        }
+        return res;
+    }
+
+    @Override
+    public boolean queryUserByUserCode(String userCode) {
+        boolean res = false;
+        Connection connection = BaseDao.getConnection();
+        User user = null;
+
+        try {
+            //业务层调用对应的数据库
+            user = userDao.getLoginUser(connection, userCode);
+            if (user != null) {
+                res = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            BaseDao.closeResource(connection, null, null);
+        }
+        return res;
     }
 
     public User login(String userCode, String password) {

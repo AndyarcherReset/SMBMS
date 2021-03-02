@@ -38,7 +38,7 @@
 	        		</select>
 					 <input type="hidden" name="pageIndex" value="1"/>
 					 <input	value="查 询" type="submit" id="searchbutton">
-					 <a href="${pageContext.request.contextPath}/jsp/useradd.do" >添加用户</a>
+					 <a href="${pageContext.request.contextPath}/jsp/useradd.jsp" >添加用户</a>
 				</form>
             </div>
             <!--用户-->

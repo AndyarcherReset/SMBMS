@@ -14,9 +14,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +35,46 @@ public class ModifyPwdServlet extends HttpServlet {
             this.checkPwd(req, resp);
         } else if ("query".equals(method)) {
             this.query(req, resp);
+        } else if ("add".equals(method)){
+            this.addUser(req, resp);
+        } else if ("checkUserCode".equals(method)) {
+            this.checkUserCode(req,resp);
         }
+    }
+
+    private void addUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String userCode = req.getParameter("userCode");
+        String userName = req.getParameter("userName");
+        String userPassword = req.getParameter("userPassword");
+        String phone = req.getParameter("phone");
+        String birthday = req.getParameter("birthday");
+        String userRole = req.getParameter("userRole");
+        String address = req.getParameter("address");
+        String gender = req.getParameter("gender");
+
+        User user = new User();
+        user.setUserCode(userCode);
+        user.setUserName(userName);
+        user.setUserPassword(userPassword);
+        user.setPhone(phone);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");//注意月份是MM
+        try {
+            user.setBirthday(simpleDateFormat.parse(birthday));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        user.setUserRole(Integer.parseInt(userRole));
+        user.setAddress(address);
+        user.setGender(Integer.parseInt(gender));
+        user.setCreationDate(new Date());
+        user.setCreatedBy(((User) req.getSession().getAttribute(Constants.USER_SESSION)).getId());
+        UserServiceImpl userService = new UserServiceImpl();
+        int i = userService.addUser(user);
+
+        if (i > 0) {
+            resp.sendRedirect(req.getContextPath() + "/jsp/user.do?method=query");
+        }
+
     }
 
     private void query(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -140,6 +182,32 @@ public class ModifyPwdServlet extends HttpServlet {
             }
         }
 
+        resp.setContentType("application/json");
+        try {
+            PrintWriter writer = resp.getWriter();
+            writer.write(JSONArray.toJSONString(resultMap));
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkUserCode(HttpServletRequest req, HttpServletResponse resp) {
+        String userCode = req.getParameter("userCode");
+        UserServiceImpl userService = new UserServiceImpl();
+        boolean res = userService.queryUserByUserCode(userCode);
+        Map<String, String> resultMap = new HashMap<String, String>();
+
+        if (userCode.isEmpty()) {
+            resultMap.put("result", "error");
+        } else{
+            if (res){
+                resultMap.put("result", "exist");
+            }else {
+                resultMap.put("result", "green");
+            }
+        }
         resp.setContentType("application/json");
         try {
             PrintWriter writer = resp.getWriter();

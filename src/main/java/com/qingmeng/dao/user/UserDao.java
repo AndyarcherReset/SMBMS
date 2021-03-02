@@ -19,4 +19,7 @@ public interface UserDao {
 
     //获取用户列表
     public List<User> getUserList(Connection connection, String userName,int userRole, int curPageNo, int pageSize)throws SQLException;
+
+    //添加用户
+    public int addUser(Connection connection, User user) throws SQLException;
 }
