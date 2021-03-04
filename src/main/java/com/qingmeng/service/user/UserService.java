@@ -19,6 +19,8 @@ public interface UserService {
 
     public boolean queryUserByUserCode(String userCode);
 
+    public User queryUserById(int id);
+
     public int addUser(User user);
 
     public int deleteUserById(int id);

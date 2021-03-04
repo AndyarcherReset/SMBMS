@@ -25,4 +25,6 @@ public interface UserDao {
 
     //删除用户
     public int deleteUserById(Connection connection, int id) throws SQLException;
+
+    User queryUserById(Connection connection, int id) throws SQLException;
 }

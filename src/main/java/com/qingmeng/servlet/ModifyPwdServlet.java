@@ -40,7 +40,19 @@ public class ModifyPwdServlet extends HttpServlet {
             this.checkUserCode(req,resp);
         } else if ("deleteUser".equals(method)) {
             this.deleteUser(req, resp);
+        } else if ("modify".equals(method)) {
+            this.modifyUser(req, resp);
+        } else if ("edit".equals(method)) {
+            this.addUser(req, resp);
         }
+    }
+
+    private void modifyUser(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        String uid = req.getParameter("uid");
+        UserServiceImpl userService = new UserServiceImpl();
+        User user = userService.queryUserById(Integer.parseInt(uid));
+        req.setAttribute("user",user);
+        req.getRequestDispatcher("usermodify.jsp").forward(req, resp);
     }
 
     private void setJasonType(HttpServletResponse resp,Map<String, String> resultMap) {

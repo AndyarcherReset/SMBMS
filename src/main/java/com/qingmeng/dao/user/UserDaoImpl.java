@@ -15,36 +15,45 @@ import java.util.List;
 
 public class UserDaoImpl implements UserDao {
     public User getLoginUser(Connection connection, String userCode) throws SQLException {
+        String sql = "select * from smbms_user where userCode=?";
+        Object[] params = {userCode};
+        return getUserBySql(connection, sql, params);
+    }
 
-        PreparedStatement pstm = null;
-        ResultSet rs = null;
-        User user = null;
+    private User getUserBySql(Connection connection, String sql, Object[] params) throws SQLException {
+        User res = null;
 
         if (connection != null) {
-            String sql = "select * from smbms_user where userCode=?";
-            Object[] params = {userCode};
-
+            PreparedStatement pstm =null;
+            ResultSet rs = null;
             rs = BaseDao.execute(connection, pstm, rs, sql, params);
 
             if (rs.next()) {
-                user = new User();
-                user.setId(rs.getInt("id"));
-                user.setUserCode(rs.getString("userCode"));
-                user.setUserName(rs.getString("userName"));
-                user.setUserPassword(rs.getString("userPassword"));
-                user.setGender(rs.getInt("gender"));
-                user.setBirthday(rs.getDate("birthday"));
-                user.setPhone(rs.getString("phone"));
-                user.setAddress(rs.getString("address"));
-                user.setUserRole(rs.getInt("userRole"));
-                user.setCreatedBy(rs.getInt("createdBy"));
-                user.setCreationDate(rs.getTimestamp("creationDate"));
-                user.setModifyBy(rs.getInt("modifyBy"));
-                user.setModifyDate(rs.getDate("modifyDate"));
+                res = new User();
+                res.setId(rs.getInt("id"));
+                res.setUserCode(rs.getString("userCode"));
+                res.setUserName(rs.getString("userName"));
+                res.setUserPassword(rs.getString("userPassword"));
+                res.setGender(rs.getInt("gender"));
+                res.setBirthday(rs.getDate("birthday"));
+                res.setPhone(rs.getString("phone"));
+                res.setAddress(rs.getString("address"));
+                res.setUserRole(rs.getInt("userRole"));
+                res.setCreatedBy(rs.getInt("createdBy"));
+                res.setCreationDate(rs.getTimestamp("creationDate"));
+                res.setModifyBy(rs.getInt("modifyBy"));
+                res.setModifyDate(rs.getDate("modifyDate"));
             }
             BaseDao.closeResource(null, pstm, rs);
         }
-        return user;
+
+        return res;
+    }
+    @Override
+    public User queryUserById(Connection connection, int id) throws SQLException {
+        String sql = "select * from smbms_user where id=?";
+        Object[] params = {id};
+        return getUserBySql(connection, sql, params);
     }
 
     //修改用户密码

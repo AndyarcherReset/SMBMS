@@ -64,6 +64,21 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public User queryUserById(int id) {
+        User user = null;
+        Connection connection = BaseDao.getConnection();
+        try {
+            //业务层调用对应的数据库
+            user = userDao.queryUserById(connection, id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            BaseDao.closeResource(connection, null, null);
+        }
+        return user;
+    }
+
+    @Override
     public boolean queryUserByUserCode(String userCode) {
         boolean res = false;
         Connection connection = BaseDao.getConnection();
