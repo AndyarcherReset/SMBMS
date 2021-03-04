@@ -20,4 +20,6 @@ public interface UserService {
     public boolean queryUserByUserCode(String userCode);
 
     public int addUser(User user);
+
+    public int deleteUserById(int id);
 }

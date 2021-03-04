@@ -60,6 +60,19 @@ public class UserDaoImpl implements UserDao {
         return res;
     }
 
+    @Override
+    public int deleteUserById(Connection connection, int id) throws SQLException {
+        int res = 0;
+        if (connection != null) {
+            PreparedStatement pstm = null;
+            String sql = "delete from smbms_user where id = ?";
+            Object[] params = {id};
+            res = BaseDao.execute(connection, pstm, sql, params);
+            BaseDao.closeResource(null, pstm, null);
+        }
+        return  res;
+    }
+
     public int queryUserCount(Connection connection, String userName, int userRole) throws SQLException {
         int count = 0;
 

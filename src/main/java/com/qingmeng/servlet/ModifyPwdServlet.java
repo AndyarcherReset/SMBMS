@@ -14,7 +14,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -39,10 +38,41 @@ public class ModifyPwdServlet extends HttpServlet {
             this.addUser(req, resp);
         } else if ("checkUserCode".equals(method)) {
             this.checkUserCode(req,resp);
+        } else if ("deleteUser".equals(method)) {
+            this.deleteUser(req, resp);
         }
     }
 
-    private void addUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void setJasonType(HttpServletResponse resp,Map<String, String> resultMap) {
+        resp.setContentType("application/json");
+        try {
+            PrintWriter writer = resp.getWriter();
+            writer.write(JSONArray.toJSONString(resultMap));
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void deleteUser(HttpServletRequest req, HttpServletResponse resp)  {
+        String userid = req.getParameter("id");
+        Map<String, String> resultMap = new HashMap<String, String>();
+        if(!userid.isEmpty()){
+            UserServiceImpl userService = new UserServiceImpl();
+            int res = userService.deleteUserById(Integer.parseInt(userid));
+
+            if (res==1) {
+                resultMap.put("result", "true");
+            } else{
+                resultMap.put("result", "false");
+            }
+        }else {
+            resultMap.put("result", "notexist");
+        }
+        this.setJasonType(resp, resultMap);
+    }
+
+    private void addUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String userCode = req.getParameter("userCode");
         String userName = req.getParameter("userName");
         String userPassword = req.getParameter("userPassword");
@@ -182,15 +212,7 @@ public class ModifyPwdServlet extends HttpServlet {
             }
         }
 
-        resp.setContentType("application/json");
-        try {
-            PrintWriter writer = resp.getWriter();
-            writer.write(JSONArray.toJSONString(resultMap));
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.setJasonType(resp, resultMap);
     }
 
     private void checkUserCode(HttpServletRequest req, HttpServletResponse resp) {
@@ -208,14 +230,6 @@ public class ModifyPwdServlet extends HttpServlet {
                 resultMap.put("result", "green");
             }
         }
-        resp.setContentType("application/json");
-        try {
-            PrintWriter writer = resp.getWriter();
-            writer.write(JSONArray.toJSONString(resultMap));
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.setJasonType(resp, resultMap);
     }
 }

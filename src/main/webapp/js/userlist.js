@@ -1,30 +1,4 @@
 var userObj;
-//
-// //用户管理页面上点击删除按钮弹出删除框(userlist.jsp)
-// function deleteUser(obj){
-// 	$.ajax({
-// 		type:"GET",
-// 		url:path+"/jsp/user.do",
-// 		data:{uid:obj.attr("userid")},
-//         dataType:"json",
-// 		success:function(data){
-// 			if(data.delResult == "true"){//删除成功：移除删除行
-// 				cancleBtn();
-// 				obj.parents("tr").remove();
-// 			}else if(data.delResult == "false"){//删除失败
-// 				//alert("对不起，删除用户【"+obj.attr("username")+"】失败");
-// 				changeDLGContent("对不起，删除用户【"+obj.attr("username")+"】失败");
-// 			}else if(data.delResult == "notexist"){
-// 				//alert("对不起，用户【"+obj.attr("username")+"】不存在");
-// 				changeDLGContent("对不起，用户【"+obj.attr("username")+"】不存在");
-// 			}
-// 		},
-// 		error:function(data){
-// 			//alert("对不起，删除失败");
-// 			changeDLGContent("对不起，删除失败");
-// 		}
-// 	});
-// }
 
 function openYesOrNoDLG(){
 	$('.zhezhao').css('display', 'block');
@@ -55,7 +29,7 @@ $(function(){
 	
 	$(".modifyUser").on("click",function(){
 		var obj = $(this);
-		window.location.href=path+"/user/modify.do?uid="+ obj.attr("userid");
+		window.location.href=path+"/jsp/user.do?method=modify&uid="+ obj.attr("userid");
 	});
 
 	$('#no').click(function () {
@@ -68,19 +42,20 @@ $(function(){
 	
 	$(".deleteUser").on("click",function(){
 		var obj = $(this);
-		if(confirm("你确定要删除用户【"+obj.attr("username")+"】吗？")){
+		if(confirm("你确定要删除用户【"+obj.attr("username")+ "】吗？")){
 			$.ajax({
 				type:"GET",
-				url:path+"/user/del.do",
-				data:{id:obj.attr("userid")},
-				dataType:"json",
+				url:path+"/jsp/user.do",
+				data:{method:"deleteUser",id:obj.attr("userid")},
+				dataType:"JSON",
 				success:function(data){
-					if(data == true){//删除成功：移除删除行
+					debugger
+					if(data.result == "true"){//删除成功：移除删除行
 						alert("删除成功");
 						obj.parents("tr").remove();
-					}else if(data == false){//删除失败
+					}else if(data.result == "false"){//删除失败
 						alert("对不起，删除用户【"+obj.attr("username")+"】失败");
-					}else if(data == "notexist"){
+					}else if(data.result == "notexist"){
 						alert("对不起，用户【"+obj.attr("username")+"】不存在");
 					}
 				},

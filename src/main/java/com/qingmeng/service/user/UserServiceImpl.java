@@ -19,6 +19,28 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public int deleteUserById(int id) {
+        int res = 0;
+        Connection connection = BaseDao.getConnection();
+        try {
+            connection.setAutoCommit(false);
+            res = userDao.deleteUserById(connection, id);
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {
+                connection.rollback();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        } finally {
+            BaseDao.closeResource(connection, null, null);
+        }
+
+        return res;
+    }
+
+    @Override
     public int addUser(User user) {
         int res = 0;
         Connection connection = BaseDao.getConnection();

@@ -22,4 +22,7 @@ public interface UserDao {
 
     //添加用户
     public int addUser(Connection connection, User user) throws SQLException;
+
+    //删除用户
+    public int deleteUserById(Connection connection, int id) throws SQLException;
 }
